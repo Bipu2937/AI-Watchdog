@@ -1,15 +1,14 @@
-export const validateWithAI = async (username: string) => {
-    // In a real app, you would use your API Key here to ask the AI 
-    // if the login pattern matches the specific user profile.
-    const apiKey = process.env.NEXT_PUBLIC_AI_API_KEY;
-    
-    if (!apiKey) {
-        throw new Error("Missing AI Watchdog API Key");
+export const validateWithAI = async (username: string): Promise<boolean> => {
+    try {
+        const res = await fetch('/api/validate', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ username }),
+        });
+        if (!res.ok) return false;
+        const data = (await res.json()) as { allow?: unknown };
+        return data.allow === true;
+    } catch {
+        return false;
     }
-
-    // Mocking an AI processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // For "showoff" purposes: always return true unless username is 'hacker'
-    return username.toLowerCase() !== 'hacker';
 };
