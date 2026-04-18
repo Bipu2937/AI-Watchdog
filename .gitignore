@@ -13,6 +13,9 @@
 # production
 /build
 
+# typescript build info
+*.tsbuildinfo
+
 # misc
 .DS_Store
 *.pem
